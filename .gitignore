@@ -81,3 +81,5 @@ GTAGS
 *.orig
 *~
 \#*#
+tools/pipom9/linaro_toolchain
+tools/pipom9/rkflashkit
