@@ -20,10 +20,10 @@ export ARCH=arm
 
 # Use ccache to improve build time
 if [ -z ${USE_CCACHE} ] ; then
+	export CROSS_COMPILE="$__LINARO_TOOLCHAIN_PATH/bin/arm-eabi-"
+else
 	echo  using ccache
 	export CROSS_COMPILE="ccache $__LINARO_TOOLCHAIN_PATH/bin/arm-eabi-"
-else
-	export CROSS_COMPILE="$__LINARO_TOOLCHAIN_PATH/bin/arm-eabi-"
 fi
 
 # export CROSS_COMPILE=$__LINARO_TOOLCHAIN_PATH/bin/
