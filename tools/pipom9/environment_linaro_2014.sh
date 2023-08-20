@@ -1,5 +1,7 @@
 # Environment for building Linux for Pipo M9, RK3188-based platform
 
+USE_CCACHE="1"
+
 export ARCH=arm
 export SRCARCH=arm
 export INSTALL_MOD_PATH=./modules
@@ -14,7 +16,16 @@ export __LINARO_TOOLCHAIN_PATH="$(realpath linaro_toolchain)/arm-cortex_a9-linux
 export PATH=$__LINARO_TOOLCHAIN_PATH/bin:$PATH
 export ARCH=arm
 # export SUBARCH=arm
-export CROSS_COMPILE=$__LINARO_TOOLCHAIN_PATH/bin/arm-eabi-
+
+
+# Use ccache to improve build time
+if [ -z ${USE_CCACHE} ] ; then
+	echo  using ccache
+	export CROSS_COMPILE="ccache $__LINARO_TOOLCHAIN_PATH/bin/arm-eabi-"
+else
+	export CROSS_COMPILE="$__LINARO_TOOLCHAIN_PATH/bin/arm-eabi-"
+fi
+
 # export CROSS_COMPILE=$__LINARO_TOOLCHAIN_PATH/bin/
 export INSTALL_MOD_PATH=./modules
 export INSTALL_PATH=./install
