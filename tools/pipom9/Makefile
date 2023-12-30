@@ -6,10 +6,10 @@ rkbin:
 	git clone git@github.com:RKLins/rkbin.git rkbin
 
 linaro_toolchain:
-	$(PYTHON) scripts/clone_linaro_toolchain.py
+	- $(PYTHON) scripts/clone_linaro_toolchain.py
 
 rkflashkit:
-	$(PYTHON) scripts/clone_rkflashkit.sh
+	- $(PYTHON) scripts/clone_rkflashkit.sh
 
 preloader: rkbin
 	$(PYTHON) scripts/make_preloader.py
