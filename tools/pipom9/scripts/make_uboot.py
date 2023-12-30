@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 
-from . import rockchip_environment
 import os
 import pathlib
+import rockchip_environment
 import tired.command
 import tired.fs
 import tired.logging
@@ -10,7 +10,7 @@ import tired.logging
 
 HERE = pathlib.Path(__file__).resolve().parent
 RKBIN = HERE.parent / "rkbin"
-UBOOT = HERE.parent / "u-boot-rockchip"
+UBOOT = HERE.parent / "u-boot"
 
 
 def main():
