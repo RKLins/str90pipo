@@ -1,5 +1,11 @@
 #!/usr/bin/python3
 
+"""
+Implements U-Boot build instructions from:
+- https://wiki.radxa.com/Rock/U-Boot
+- https://opensource.rock-chips.com/wiki_Boot_option#U-Boot
+"""
+
 import os
 import pathlib
 import rockchip_environment
