@@ -15,7 +15,21 @@ import tired.logging
 
 
 HERE = pathlib.Path(__file__).resolve().parent
+
+# U-Boot repository
 UBOOT = HERE.parent / "u-boot"
+
+# Rockchip utility binaries
+RKBIN = HERE.parent / "rkbin"
+
+# Compiled U-Boot
+UBOOT_OUT = UBOOT / "u-boot-sd.img"
+
+# Packed U-Boot
+UBOOT_PACKED_OUT = HERE / "uboot.img"
+
+# RK3188 memory layout, flash (TODO: verify)
+SYS_TEXT_BASE = "0x80000000"
 
 def build_rockchip_uboot():
     # Change toolchain location
@@ -40,10 +54,18 @@ def clone_radxa_uboot():
 
 
 def build_radxa_uboot():
+    tired.logging.info("Building Radxa U-Boot")
     tired.logging.info(f"Changing PWD: ${UBOOT}")
     os.chdir(UBOOT)
     tired.command.execute(f"make rk30xx")
     tired.command.execute(f"./pack-sd.sh")
+
+
+def pack_uboot():
+    tired.logging.info("Packing U-Boot")
+    loaderimage = RKBIN / "tools" / "loaderimage"
+    command = f'{loaderimage} --pack --uboot "{UBOOT_OUT}" "{UBOOT_PACKED_OUT}" "{SYS_TEXT_BASE}"'
+    tired.command.execute(command)
 
 
 def main():
@@ -55,6 +77,9 @@ def main():
 
     # Execute
     build_radxa_uboot()
+
+    # Pack u-boot
+    pack_uboot()
 
 
 if __name__ == "__main__":

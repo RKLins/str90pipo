@@ -1,7 +1,8 @@
-#/usr/bin/python3
+#!/usr/bin/python3
 
 
 import os
+import pathlib
 import tired.command
 import tired.fs
 import tired.logging
