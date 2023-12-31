@@ -14,7 +14,7 @@ rkflashkit:
 preloader: rkbin
 	$(PYTHON) scripts/make_preloader.py
 
-uboot: linaro_toolchain
+uboot: linaro_toolchain rkbin
 	$(PYTHON) scripts/make_uboot.py
 
 complete: preloader uboot
