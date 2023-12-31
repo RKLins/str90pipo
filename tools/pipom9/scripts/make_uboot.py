@@ -28,7 +28,7 @@ def build_rockchip_uboot():
 def clone_radxa_uboot():
     # Clone from git, if haven't yet
     if not UBOOT.is_dir():
-        tired.command.execute(f"git clone -b u-boot-rk3188-sdcard https://github.com/radxa/u-boot-rockchip.git {UBOOT}")
+        tired.command.execute(f"git clone -b u-boot-rk3188-sdcard https://github.com/RKLins/u-boot-rockchip.git {UBOOT}")
     else:
         tired.logging.info(f"{UBOOT.name} repository is already present, skipping")
 
