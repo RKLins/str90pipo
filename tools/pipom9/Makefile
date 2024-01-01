@@ -30,9 +30,12 @@ initrd.img:
 	$(PYTHON) scripts/make_initramfs.py
 
 Image:
-	./build.sh
+	$(BASH) ./build.sh
 	cp ../../arch/arm/boot/Image .
 	echo Image -- done
+
+config:
+	$(BASH) ./configure_old.sh
 
 boot.img: initrd.img mkbootimg_tool/mkbootimg
 	mkbootimg_tool/mkbootimg --kernel Image --ramdisk initrd.img -o boot.img
@@ -47,6 +50,10 @@ parameter.img:
 	mv scripts/parameter.img parameter.img
 	echo parameter.img -- done
 
-complete: idbloader.img u-boot-sd.img trust initrd.img boot.img
+rootfs.ext4:
+	$(PYTHON) scripts/rootfs.py
+	mv scripts/rootfs.ext4 .
+
+complete: idbloader.img u-boot-sd.img trust initrd.img boot.img rootfs.ext4
 
 .PHONY: rkflashkit
