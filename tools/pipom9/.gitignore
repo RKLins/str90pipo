@@ -1,0 +1,17 @@
+rkbin
+rkflashkit/
+parameter.img
+scripts/parameter_linux_sd*
+scripts/__pycache__
+initrd/
+mkbootimg_tool
+rkflashkitold/
+rkflashtool/
+rootfs.ext4
+rootfs/
+zImage
+u-boot/
+uboot.img
+boot.img
+Image
+idbloader.img
