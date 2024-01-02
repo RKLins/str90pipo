@@ -15,3 +15,4 @@ uboot.img
 boot.img
 Image
 idbloader.img
+bin/
