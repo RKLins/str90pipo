@@ -2,6 +2,7 @@ PYTHON = /usr/bin/python3
 GIT = /usr/bin/git
 BASH = /usr/bin/bash
 MKBOOTIMG = mkbootimg_tool/mkbootimg
+RKDEVELOPTOOL = rkbin/tools/rkdeveloptool
 
 main: complete
 
@@ -44,6 +45,9 @@ zImage:
 
 bootzimage: zImage $(MKBOOTIMG) initrd.img
 	$(MKBOOTIMG) --kernel zImage --ramdisk initrd.img --output str90-zimage-$$(date +%Y%m%d%H%M | tr -d \\n).bin
+
+flash_bootzimage: $(RKDEVELOPTOOL)
+	sudo RKDEVELOPTOOL=$(RKDEVELOPTOOL) scripts/flash_bootzimage.sh
 
 config:
 	$(BASH) ./configure_old.sh
