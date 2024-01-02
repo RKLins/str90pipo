@@ -1,6 +1,7 @@
 PYTHON = /usr/bin/python3
 GIT = /usr/bin/git
 BASH = /usr/bin/bash
+MKBOOTIMG = mkbootimg_tool/mkbootimg
 
 main: complete
 
@@ -23,7 +24,7 @@ trust: rkbin
 	exit 0
 	rkbin/tools/trust_merger rkbin/RKTRUST/
 
-mkbootimg_tool/mkbootimg:
+$(MKBOOTIMG):
 	$(PYTHON) scripts/make_boot_img.py
 
 initrd.img:
@@ -33,6 +34,16 @@ Image:
 	$(BASH) ./build.sh
 	cp ../../arch/arm/boot/Image .
 	echo Image -- done
+
+# The old (working) way of preparing the image
+bootimage: Image $(MKBOOTIMG)
+	$(MKBOOTIMG) --kernel Image --ramdisk initrd.img --output str90-image-$(date +%Y%m%d%H%M | tr -d \\n).bin
+
+zImage:
+	$(BASH) ./scripts/build_zimage.sh
+
+bootzimage: zImage $(MKBOOTIMG) initrd.img
+	$(MKBOOTIMG) --kernel zImage --ramdisk initrd.img --output str90-zimage-$$(date +%Y%m%d%H%M | tr -d \\n).bin
 
 config:
 	$(BASH) ./configure_old.sh
@@ -53,7 +64,20 @@ parameter.img:
 rootfs.ext4:
 	$(PYTHON) scripts/rootfs.py
 	mv scripts/rootfs.ext4 .
+	echo rootfs.ext4 -- done
 
-complete: idbloader.img u-boot-sd.img trust initrd.img boot.img rootfs.ext4
+rkcrc:
+	-$(GIT) clone https://github.com/RKLins/rkflashtool.git rkflashtool
+	$(MAKE) -C rkflashtool
+	cd rkflashtool \
+		&& cp -f rkflashtool rkcrc rkunpack rkunsign ~/bin
+
+parameter.img:
+	cd scripts \
+		&& $(BASH) make_parameter_img.sh
+	cp scripts/parameter.img parameter.img
+
+
+complete: idbloader.img u-boot-sd.img trust parameter.img initrd.img boot.img rootfs.ext4
 
 .PHONY: rkflashkit
