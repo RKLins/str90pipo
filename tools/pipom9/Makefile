@@ -37,7 +37,7 @@ Image:
 
 # The old (working) way of preparing the image
 bootimage: Image $(MKBOOTIMG)
-	$(MKBOOTIMG) --kernel Image --ramdisk initrd.img --output str90-image-$(date +%Y%m%d%H%M | tr -d \\n).bin
+	$(MKBOOTIMG) --kernel Image --ramdisk initrd.img --output str90-image-$$(date +%Y%m%d%H%M | tr -d \\n).bin
 
 zImage:
 	$(BASH) ./scripts/build_zimage.sh
