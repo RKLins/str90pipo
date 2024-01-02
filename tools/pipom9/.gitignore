@@ -16,3 +16,4 @@ boot.img
 Image
 idbloader.img
 bin/
+initrd.img
