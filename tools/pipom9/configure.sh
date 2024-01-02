@@ -1,9 +1,13 @@
 #!/bin/bash
 
-BASE_PATH=$(realpath ${PWD})/../..
-CONFIGURATION_FILE_PATH=${BASE_PATH}/arch/arm/configs/Pipo_M9_Pro_DDR_OC_defconfig
-DESTINATION_CONFIGURATION_FILE_PATH=${BASE_PATH}/.config
+echo Setting up environment...
+.  environment_linaro_2014.sh
+echo ARCH=$ARCH
+export MAKEFLAGS='--jobs=20 '$MAKEFLAGS
+cd ../..
 
-COMMAND="cp -f ${CONFIGURATION_FILE_PATH} ${DESTINATION_CONFIGURATION_FILE_PATH}"
-echo "> $COMMAND"
-eval $COMMAND
+echo Configuring build...
+make configure Pipo_M9Max_defconfig
+
+echo Running menuconfig to generate .config file
+make menuconfig
