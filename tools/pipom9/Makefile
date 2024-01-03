@@ -52,7 +52,7 @@ flash_bootzimage: $(RKDEVELOPTOOL)
 config:
 	$(BASH) ./configure_old.sh
 
-boot.img: initrd.img mkbootimg_tool/mkbootimg
+boot.img: initrd.img mkbootimg_tool/mkbootimg Image
 	mkbootimg_tool/mkbootimg --kernel Image --ramdisk initrd.img -o boot.img
 	echo ./boot.img -- done
 
