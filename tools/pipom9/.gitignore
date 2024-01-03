@@ -17,3 +17,5 @@ Image
 idbloader.img
 bin/
 initrd.img
+toolchain-arm-eabi-4.6/
+initrd.img
