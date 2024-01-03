@@ -45,6 +45,15 @@ def build_rockchip_uboot():
     tired.command.execute(command)
 
 
+def clone_kitcat_uboot_google_toolchain():
+    toolchain_dir = HERE.parent / "toolchain-arm-eabi-4.6"
+
+    if not toolchain_dir.is_dir():
+        tired.command.execute(f'git clone https://github.com/RKLins/linaro-toolchain-uboot.git "{toolchain_dir}"')
+    else:
+        tired.logging.info(f'The toolchain directory "{toolchain_dir}" is already present, assuming the toolchain is already installed, skipping')
+
+
 def clone_radxa_uboot():
     # Clone from git, if haven't yet
     if not UBOOT.is_dir():
@@ -53,7 +62,7 @@ def clone_radxa_uboot():
         tired.logging.info(f"{UBOOT.name} repository is already present, skipping")
 
 
-def build_radxa_uboot():
+def build_radxa_uboot_sd():
     tired.logging.info("Building Radxa U-Boot")
     tired.logging.info(f"Changing PWD: ${UBOOT}")
     os.chdir(UBOOT)
@@ -72,11 +81,14 @@ def main():
     # Clone
     clone_radxa_uboot()
 
+    # Ensure the proper toolchain is installed
+    clone_kitcat_uboot_google_toolchain()
+
     # Update necessary environment variables
-    rockchip_environment.update_env()
+    rockchip_environment.update_env_uboot()
 
     # Execute
-    build_radxa_uboot()
+    build_radxa_uboot_sd()
 
     # Pack u-boot
     pack_uboot()
