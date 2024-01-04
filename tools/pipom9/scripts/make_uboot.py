@@ -10,8 +10,10 @@ import os
 import pathlib
 import rockchip_environment
 import tired.command
+import tired.env
 import tired.fs
 import tired.logging
+import tired.ui
 
 
 HERE = pathlib.Path(__file__).resolve().parent
@@ -63,21 +65,35 @@ def clone_radxa_uboot():
 
 
 def build_radxa_uboot_sd():
-    tired.logging.info("Building Radxa U-Boot")
+    tired.logging.info("Building Radxa U-Boot (SD)")
     tired.logging.info(f"Changing PWD: ${UBOOT}")
     os.chdir(UBOOT)
+    tired.command.execute("git checkout u-boot-rk3188-sdcard")
     tired.command.execute(f"make rk30xx")
     tired.command.execute(f"./pack-sd.sh")
 
 
+def build_radxa_uboot_nand():
+    tired.logging.info("Building Radxa U-Boot (NAND)")
+    tired.logging.info(f"Changing PWD: ${UBOOT}")
+    os.chdir(UBOOT)
+    tired.command.execute("git checkout u-boot-rk3188")
+    tired.command.execute(f"make rk30xx")
+
+
 def pack_uboot():
+    """
+    Pack U-Boot when using idbloader
+    https://opensource.rock-chips.com/wiki_Boot_option (search for "When using
+    idbLoader")
+    """
     tired.logging.info("Packing U-Boot")
     loaderimage = RKBIN / "tools" / "loaderimage"
     command = f'{loaderimage} --pack --uboot "{UBOOT_OUT}" "{UBOOT_PACKED_OUT}" "{SYS_TEXT_BASE}"'
     tired.command.execute(command)
 
 
-def main():
+def main(make_for_sd=True):
     # Clone
     clone_radxa_uboot()
 
@@ -88,10 +104,19 @@ def main():
     rockchip_environment.update_env_uboot()
 
     # Execute
-    build_radxa_uboot_sd()
+    if tired.env.try_get_env("CONFIG_PIPO_UBOOT_SD") is None:
+        tired.ui.select_callback({
+            "Build Radxa U-Boot for SD card": build_radxa_uboot_sd,
+            "Build Radxa U-Boot for NAND": build_radxa_uboot_nand,
+        })
+    else:
+        build_radxa_uboot_sd()
 
     # Pack u-boot
-    pack_uboot()
+    should_pack_uboot = tired.env.try_get_env("CONFIG_PIPO_UBOOT_PACK_IDBLOADER", type_=bool)
+
+    if should_pack_uboot is None and tired.ui.select_yn("Pack U-Boot with idbloader?"):
+        pack_uboot()
 
 
 if __name__ == "__main__":
